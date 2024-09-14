@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Wars Quiz</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Baloo 2', sans-serif;
+            background-color: #38B6FF; /* Background color */
+            color: black;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        #yellow-box {
+            width: 200px;
+            height: 200px;
+            background-color: #FED405; /* Yellow color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            border: 5px solid black; /* Black edging */
+            transition: transform 0.1s ease-in-out;
+        }
+
+        #question-answer {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Keyframes for the bounce animation */
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Class to trigger the bounce animation */
+        .animate-bounce {
+            animation: bounce 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="yellow-box">STAR WARS</div>
+
+    <div id="question-answer"></div>
+
+    <script>
+        const yellowBox = document.getElementById("yellow-box");
+        const questionAnswerDiv = document.getElementById("question-answer");
+
+        // Array of Star Wars trivia questions and answers
+        const starWarsQuestions = [
+            { question: "Who is the creator of Star Wars?", answer: "George Lucas" },
+            { question: "What planet is Luke Skywalker from?", answer: "Tatooine" },
+            { question: "Who is the Sith Lord in 'The Phantom Menace'?", answer: "Darth Sidious" },
+            { question: "What is the name of Han Solo's ship?", answer: "Millennium Falcon" },
+            { question: "Which character says, 'I have a bad feeling about this' in multiple films?", answer: "C-3PO" },
+            { question: "Who is the leader of the Rebel Alliance in 'A New Hope'?", answer: "Princess Leia" },
+            { question: "What type of droid is R2-D2?", answer: "Astromech droid" },
+            { question: "Which planet is known as the home of the Wookiees?", answer: "Kashyyyk" },
+            { question: "Who is the father of Luke Skywalker?", answer: "Darth Vader" },
+            { question: "What is the name of the Jedi master who trains Luke Skywalker?", answer: "Yoda" },
+            { question: "In which movie does Han Solo first meet Chewbacca?", answer: "Star Wars: Episode III – Revenge of the Sith" },
+            { question: "What is the name of the prison moon in 'Return of the Jedi'?", answer: "Endor" },
+            { question: "Who is the main antagonist in 'The Empire Strikes Back'?", answer: "Darth Vader" },
+            { question: "What is the name of the desert planet in 'A New Hope'?", answer: "Tatooine" },
+            { question: "Which character is known for saying, 'Do or do not, there is no try'?", answer: "Yoda" },
+            { question: "What is the name of the bounty hunter who captures Han Solo in 'The Empire Strikes Back'?", answer: "Boba Fett" },
+            { question: "Who was the original Emperor in the Star Wars trilogy?", answer: "Emperor Palpatine" },
+            { question: "What is the name of the secret Rebel base in 'The Empire Strikes Back'?", answer: "Hoth" },
+            { question: "Who is the leader of the Separatists in 'Attack of the Clones'?", answer: "Count Dooku" },
+            { question: "Which film features the creation of Darth Vader?", answer: "Star Wars: Episode III – Revenge of the Sith" },
+            { question: "What is the name of the remote system that is the setting of 'A New Hope'?", answer: "Alderaan" },
+            { question: "Who is the female protagonist in 'The Force Awakens'?", answer: "Rey" },
+            { question: "What is the name of the famous starship battle in 'Return of the Jedi'?", answer: "The Battle of Endor" },
+            { question: "Which Jedi Knight becomes the apprentice of Darth Sidious?", answer: "Anakin Skywalker" },
+            { question: "Who voices Darth Vader in the original trilogy?", answer: "James Earl Jones" },
+            { question: "What is the name of the final episode of the original trilogy?", answer: "Return of the Jedi" },
+            { question: "Who plays the role of Obi-Wan Kenobi in the prequel trilogy?", answer: "Ewan McGregor" },
+            { question: "Which planet is destroyed by the Death Star in 'A New Hope'?", answer: "Alderaan" },
+            { question: "What is the name of the large, green, wise Jedi Master who trains Luke Skywalker?", answer: "Yoda" },
+            { question: "What is the name of the Jedi who is killed by Darth Maul in 'The Phantom Menace'?", answer: "Qui-Gon Jinn" },
+            { question: "Who is the leader of the Galactic Republic during the Clone Wars?", answer: "Palpatine" },
+            { question: "What is the name of the Jedi Order's headquarters in 'The Phantom Menace'?", answer: "The Jedi Temple" },
+            { question: "What is the name of Han Solo’s home planet?", answer: "Corellia" },
+            { question: "Who is the leader of the Rebel Alliance in 'Return of the Jedi'?", answer: "Mon Mothma" },
+            { question: "Who is the mentor of Obi-Wan Kenobi?", answer: "Qui-Gon Jinn" },
+            { question: "What is the name of the space station that can destroy entire planets?", answer: "Death Star" },
+            { question: "Who is the main antagonist in 'Return of the Jedi'?", answer: "Darth Vader" },
+            { question: "Which Star Wars film was the first to be released?", answer: "Star Wars: Episode IV – A New Hope" },
+            { question: "What is the name of the Jedi Knight who becomes a Sith Lord in 'Revenge of the Sith'?", answer: "Anakin Skywalker" },
+            { question: "Who is the leader of the Galactic Empire?", answer: "Emperor Palpatine" },
+            { question: "Which character is known for the line 'I find your lack of faith disturbing'?", answer: "Darth Vader" },
+            { question: "Who is the only character to appear in all nine mainline Star Wars films?", answer: "C-3PO" },
+            { question: "What planet is the setting of the final battle in 'The Phantom Menace'?", answer: "Naboo" },
+            { question: "What is the name of the ancient Jedi text that Rey discovers in 'The Last Jedi'?", answer: "The Sacred Jedi Texts" },
+            { question: "What is the name of Han Solo's first mate?", answer: "Chewbacca" },
+            { question: "Who is the leader of the Rebel Alliance in 'A New Hope'?", answer: "Princess Leia" },
+            { question: "Which character says, 'Help me, Obi-Wan Kenobi. You're my only hope'?", answer: "Princess Leia" },
+            { question: "Who was the Jedi Master who trained Yoda?", answer: "Qui-Gon Jinn" },
+            { question: "What is the name of the Resistance leader in 'The Force Awakens'?", answer: "Leia Organa" },
+            { question: "Which movie features the introduction of Boba Fett?", answer: "The Empire Strikes Back" },
+            { question: "What is the name of the character played by Harrison Ford?", answer: "Han Solo" },
+            { question: "Which planet is home to the Ewoks?", answer: "Endor" },
+            { question: "Who is the central character in the Star Wars prequel trilogy?", answer: "Anakin Skywalker" },
+            { question: "What is the name of the leader of the First Order?", answer: "Supreme Leader Snoke" },
+            { question: "What is the name of the Jedi Council member who becomes a Sith in 'Attack of the Clones'?", answer: "Count Dooku" },
+            { question: "Which film features the creation of the Death Star?", answer: "Rogue One: A Star Wars Story" },
+            { question: "What is the name of the planet where Luke Skywalker is trained by Yoda?", answer: "Dagobah" },
+            { question: "Who is the leader of the New Republic in 'The Force Awakens'?", answer: "Leia Organa" },
+            { question: "What is the name of the Star Wars movie that features the character of Kylo Ren?", answer: "The Force Awakens" },
+            { question: "Which film depicts the rise of Emperor Palpatine?", answer: "Revenge of the Sith" },
+            { question: "What is the name of the droid that speaks in binary code?", answer: "R2-D2" },
+            { question: "Who is the Jedi Master that trains Obi-Wan Kenobi?", answer: "Qui-Gon Jinn" },
+            { question: "Which film features the Battle of Geonosis?", answer: "Attack of the Clones" },
+            { question: "What is the name of the character who turns out to be a Sith Lord in 'Revenge of the Sith'?", answer: "Darth Sidious" }
+        ];
+
+        let shuffledQuestions = [];
+        let questionIndex = 0;
+
+        // Shuffle the questions array
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Initialize questions
+        function initializeQuestions() {
+            shuffledQuestions = shuffleArray([...starWarsQuestions]);
+            questionIndex = 0;
+            displayQuestion();
+        }
+
+        // Function to display the current question
+        function displayQuestion() {
+            if (shuffledQuestions.length === 0) {
+                questionAnswerDiv.innerHTML = "<strong>No more questions!</strong>";
+                return;
+            }
+            const currentQA = shuffledQuestions[questionIndex];
+            questionAnswerDiv.innerHTML = `<strong>Question:</strong> ${currentQA.question}<br><strong>Answer:</strong> ${currentQA.answer}`;
+        }
+
+        // Bounce animation on click
+        yellowBox.addEventListener("click", () => {
+            yellowBox.classList.add("animate-bounce");
+            setTimeout(() => {
+                yellowBox.classList.remove("animate-bounce");
+            }, 300);
+
+            questionIndex = (questionIndex + 1) % shuffledQuestions.length;
+            displayQuestion();
+        });
+
+        // Initialize questions on page load
+        window.onload = initializeQuestions;
+    </script>
+
+</body>
+</html>
